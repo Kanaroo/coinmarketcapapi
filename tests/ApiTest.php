@@ -3,14 +3,17 @@
 use CoinMarketCap\Api;
 use PHPUnit\Framework\TestCase;
 
+require_once('../vendor/autoload.php');
+
 class ApiTest extends TestCase
 {
     private $apiKey;
 
     public function setUp() : void
     {
-        // Env not coming((
-        $this->apiKey = getenv('API_KEY');
+        $dotenv = Dotenv\Dotenv::createImmutable(__DIR__  . '/../');
+        $dotenv->load();
+        $this->apiKey = $_ENV['API_KEY'];
     }
 
     public function tearDown() : void
@@ -19,10 +22,9 @@ class ApiTest extends TestCase
     }
 
     /**
-     * @test
      * @dataProvider testCases
      */
-    function it_throws_exception_for_test_cases($case)
+    function test_it_throws_exception_for_test_cases($case)
     {
         $this->expectException(\Exception::class);
 
@@ -30,10 +32,7 @@ class ApiTest extends TestCase
         $api->cryptocurrency()->map(['limit' => 3]);
     }
 
-    /**
-     * @test
-     */
-    function it_returns_some_id_with_correct_api_key()
+    function test_it_returns_some_data_with_correct_api_key()
     {
         $api = new Api($this->apiKey);
         $result = $api->cryptocurrency()->map(['limit' => 3]);
