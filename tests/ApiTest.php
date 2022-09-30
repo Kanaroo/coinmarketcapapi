@@ -32,10 +32,13 @@ class ApiTest extends TestCase
         $api->cryptocurrency()->map(['limit' => 3]);
     }
 
+    /**
+     * @throws Exception
+     */
     function test_it_returns_some_data_with_correct_api_key()
     {
         $api = new Api($this->apiKey);
-        $result = $api->cryptocurrency()->map(['limit' => 3]);
+        $result = get_object_vars($api->tools()->priceConversion(['amount' => 1, 'symbol' => 'BTC']));
 
         $this->assertArrayHasKey('status', $result);
     }
