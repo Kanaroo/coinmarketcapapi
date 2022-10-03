@@ -5,8 +5,8 @@ namespace CoinMarketCap\Utils;
 use Unirest;
 abstract class ApiRequest
 {
-    protected static string $apiPath = "https://pro-api.coinmarketcap.com/v1/";
-    private static array $headers = [
+    protected string $apiPath;
+    private array $headers = [
         'Accept' => 'application/json',
         'Content-Type' => 'application/json'
     ];
@@ -15,9 +15,10 @@ abstract class ApiRequest
      * ApiRequest constructor.
      * @param string $apiKey
      */
-    public function __construct(string $apiKey)
+    public function __construct(string $apiKey, string $path)
     {
-        self::$headers['X-CMC_PRO_API_KEY'] = $apiKey;
+        $this->headers['X-CMC_PRO_API_KEY'] = $apiKey;
+        $this->apiPath = "https://pro-api.coinmarketcap.com/v1/" . $path;
     }
 
     /**
@@ -28,8 +29,9 @@ abstract class ApiRequest
      */
     protected function get(string $endpoint, array $parameters = [])
     {
-        $apiCall = self::$apiPath . $endpoint;
-        $response = Unirest\Request::get($apiCall, self::$headers, $parameters);
+        $apiCall = $this->apiPath . $endpoint;
+        Unirest\Request::verifyPeer(false);
+        $response = Unirest\Request::get($apiCall, $this->headers, $parameters);
 
         if ($response->code == 200) {
             return $response->body;
