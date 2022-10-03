@@ -20,6 +20,12 @@ Well done!
 
 Example of using code:
 ```php
+$cmc = new CoinMarketCap\Api('your API key');
+```
+
+## Call Cryptocurrency APIs
+
+```php
 $response = $cmc->cryptocurrency()->map(['limit' => 3]);
 ```
 
