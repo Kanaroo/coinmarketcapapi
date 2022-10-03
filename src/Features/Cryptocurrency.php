@@ -13,10 +13,9 @@ class Cryptocurrency extends ApiRequest
      * Cryptocurrency constructor.
      * @param string $apiKey
      */
-    public function __construct($apiKey)
+    public function __construct($apiKey, $path)
     {
-        parent::__construct($apiKey);
-        self::$apiPath .= 'cryptocurrency' . '/';
+        parent::__construct($apiKey, $path);
     }
 
     /**
@@ -57,5 +56,35 @@ class Cryptocurrency extends ApiRequest
     public function quotesLatest($params = [])
     {
         return $this->get('quotes/latest', $params);
+    }
+
+    /**
+     * @param array $params ["start", "limit", "time_period", "convert", "convert_id" ]
+     * @return mixed
+     * @throws \Exception
+     */
+    public function trendingLatest($params = [])
+    {
+        return $this->get('trending/latest', $params);
+    }
+
+    /**
+     * @param array $params ["start", "limit", "time_period", "convert", "convert_id" ]
+     * @return mixed
+     * @throws \Exception
+     */
+    public function mostVisited($params = [])
+    {
+        return $this->get('trending/most-visited', $params);
+    }
+
+    /**
+     * @param array $params ["start", "limit", "time_period", "convert", "convert_id", "sort", "sort_dir"]
+     * @return mixed
+     * @throws \Exception
+     */
+    public function gainersLosers($params = [])
+    {
+        return $this->get('trending/gainers-losers', $params);
     }
 }

@@ -7,18 +7,14 @@ require_once('../vendor/autoload.php');
 
 class ApiTest extends TestCase
 {
-    private $apiKey;
+    private $api;
 
-    public function setUp() : void
+    public function manualSetUp() : void
     {
         $dotenv = Dotenv\Dotenv::createImmutable(__DIR__  . '/../');
         $dotenv->load();
-        $this->apiKey = $_ENV['API_KEY'];
-    }
-
-    public function tearDown() : void
-    {
-        $this->apiKey = null;
+        $apiKey = $_ENV['API_KEY'];
+        $this->api = new Api($apiKey);
     }
 
     /**
@@ -37,14 +33,26 @@ class ApiTest extends TestCase
      */
     function test_it_returns_some_data_with_correct_api_key()
     {
-        $api = new Api($this->apiKey);
-        $result = get_object_vars($api->tools()->priceConversion(['amount' => 1, 'symbol' => 'BTC']));
+        $this->manualSetUp();
+        $result = get_object_vars($this->api->cryptocurrency()->map(['limit' => 3]));
 
         $this->assertArrayHasKey('status', $result);
     }
 
+    /**
+     * @throws Exception
+     */
+    function test_it_throws_exception_for_trending_endpoint_with_basic_plan_key()
+    {
+        $this->manualSetUp();
+        $this->expectExceptionMessage("Your API Key subscription plan doesn't support this endpoint.");
+
+        $this->api->cryptocurrency()->trendingLatest(['limit' => 3]);
+    }
+
     public function testCases()
     {
+        $this->expectNotToPerformAssertions();
         return [
             [''],
             ['test'],
