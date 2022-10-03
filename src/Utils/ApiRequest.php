@@ -14,6 +14,7 @@ abstract class ApiRequest
     /**
      * ApiRequest constructor.
      * @param string $apiKey
+     * @param string $path
      */
     public function __construct(string $apiKey, string $path)
     {

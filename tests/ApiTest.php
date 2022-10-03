@@ -17,6 +17,18 @@ class ApiTest extends TestCase
         $this->api = new Api($apiKey);
     }
 
+    function test_api_is_available()
+    {
+        $this->manualSetUp();
+        try {
+            $this->api->fiat()->map(['limit' => 3]);
+        } catch (\Exception $e) {
+            $this->assertEquals($e->getCode(), 500);
+            $this->fail('API not available');
+        }
+        $this->assertTrue(true);
+    }
+
     /**
      * @dataProvider testCases
      */
@@ -47,17 +59,17 @@ class ApiTest extends TestCase
         $this->api->cryptocurrency()->trendingLatest(['limit' => 3]);
     }
 
-    /**
-     * @throws Exception
-     */
     function test_it_throws_exception_for_wrong_numeric_id()
     {
         $this->manualSetUp();
-        $this->expectExceptionMessage('Invalid value for "id": "1920319231923"');
 
-        $this->api->cryptocurrency()->info(['id' => 1920319231923]);
+        try {
+            $this->api->cryptocurrency()->info(['id' => 1920319231923]);
+        } catch (\Exception $e) {
+            $this->assertEquals($e->getMessage(), 'Invalid value for "id": "1920319231923"');
+            $this->assertEquals($e->getCode(), 400);
+        }
     }
-
 
     /**
      * @throws Exception
