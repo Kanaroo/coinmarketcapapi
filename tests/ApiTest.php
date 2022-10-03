@@ -28,9 +28,6 @@ class ApiTest extends TestCase
         $api->cryptocurrency()->map(['limit' => 3]);
     }
 
-    /**
-     * @throws Exception
-     */
     function test_it_returns_some_data_with_correct_api_key()
     {
         $this->manualSetUp();
@@ -48,6 +45,29 @@ class ApiTest extends TestCase
         $this->expectExceptionMessage("Your API Key subscription plan doesn't support this endpoint.");
 
         $this->api->cryptocurrency()->trendingLatest(['limit' => 3]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    function test_it_throws_exception_for_wrong_numeric_id()
+    {
+        $this->manualSetUp();
+        $this->expectExceptionMessage('Invalid value for "id": "1920319231923"');
+
+        $this->api->cryptocurrency()->info(['id' => 1920319231923]);
+    }
+
+
+    /**
+     * @throws Exception
+     */
+    function test_it_throws_exception_for_wrong_string_id()
+    {
+        $this->manualSetUp();
+        $this->expectExceptionMessage('"id" should only include comma-separated numeric CoinMarketCap cryptocurrency ids');
+
+        $this->api->cryptocurrency()->info(['id' => 'asdasd123']);
     }
 
     public function testCases()
